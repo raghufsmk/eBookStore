@@ -1,0 +1,44 @@
+<div fxLayout="column" fxLayoutAlign="center center" style="height:600px;">
+  <div>
+    <!-- <img src="../../assets/login.svg" style="width: 111px;height:121px;border-radius: 100%;max-width: 100%;"> -->
+    <h3 class="label-css">Online BookStore</h3>
+  </div>
+  <div>
+    <mat-label class="label-css">Login</mat-label><br><br>
+    <mat-divider></mat-divider><br>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance=outline>
+        <mat-label>Username</mat-label>
+        <mat-icon matPrefix>person_outline</mat-icon>
+        <input matInput placeholder="Username" formControlName="userName" required>
+        <mat-error *ngIf="loginForm.get('userName').invalid">Error: required field</mat-error>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance=outline>
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock_outline</mat-icon>
+        <input matInput placeholder="Password" type="password" formControlName="password" required>
+        <mat-error *ngIf="loginForm.get('password').invalid">Error: required field</mat-error>
+      </mat-form-field>
+      <br>
+      <!-- <Mat-lable class="label-css">Select what you are - </Mat-lable>
+      <mat-radio-group formControlName="roptions">
+        <mat-radio-button value="ADMIN">Admin</mat-radio-button>&nbsp;&nbsp;
+        <mat-radio-button value="STUDENT">Student</mat-radio-button>
+      </mat-radio-group>
+      <br>
+      <br> -->
+      <mat-divider></mat-divider>
+      <br>
+      <br>
+      <button mat-raised-button color="primary" class="button-class" type='submit'>Login</button>
+      &nbsp; &nbsp; &nbsp;
+      <button mat-raised-button color="warn" class="button-class" type='reset'>Clear</button>
+      <br>
+      <br>
+      <br>
+      <mat-divider></mat-divider>
+    </form>
+  </div>
+</div>
+<router-outlet></router-outlet>

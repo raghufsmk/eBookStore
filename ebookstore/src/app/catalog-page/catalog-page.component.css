@@ -1,0 +1,40 @@
+/* .page_catalog {
+}
+.page_catalog-title {
+    padding: 25px 0;
+    color: #f0ad4e;
+    text-align: center;
+}
+.page_catalog-list {
+    max-width: 928px;
+    padding-bottom: 50px;
+}
+.page_catalog-list-item{
+    border-color: #f0ad4e !important;
+}
+.page_catalog-list .content a, .page_catalog-list .content span, .page_catalog-list .content p {
+    color: white !important;
+} */
+
+catalog-item {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.cardList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  /* Column Gap */
+  .cardList > * {
+    box-sizing: border-box;
+  }
+  .cardList > *:not(:last-child) {
+    margin-right: 32px;
+  }
+  /* Item sizing */
+  .cardListItem {
+    flex: 0 1 calc(33.3% - 32px);
+  }

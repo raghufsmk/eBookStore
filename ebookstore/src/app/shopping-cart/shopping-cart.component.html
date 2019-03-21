@@ -1,0 +1,70 @@
+<mat-card>
+  <div class='cart-table'>
+    <ng-container *ngIf="totalCount > 0">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Title Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+
+        <!-- Language Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Language </th>
+          <td mat-cell *matCellDef="let element"> {{element.language}} </td>
+        </ng-container>
+
+        <!-- Publisher Column -->
+        <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef> Publisher </th>
+          <td mat-cell *matCellDef="let element"> {{element.publisher}} </td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
+
+        <!-- Price Column -->
+        <ng-container matColumnDef="symbol">
+          <th mat-header-cell *matHeaderCellDef> Price </th>
+          <td mat-cell *matCellDef="let element"> {{element.price | currency:'INR'}} </td>
+        </ng-container>
+
+        <!-- Remove Item -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef> Remove Item </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="warn" (click)="deleteItemFromCart(element)">
+              <mat-icon>delete</mat-icon>
+            </button> </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+    </ng-container>
+    <ng-container>
+      <div *ngIf="totalCount===0" class="empty-cart">Your cart is empty</div>
+    </ng-container>
+    &nbsp;
+    <div class="col-md-4">
+      <button mat-raised-button color="primary" (click)="redirectToCatalog()">
+        <mat-icon>chevron_left</mat-icon> back to store
+      </button>&nbsp;
+      <button mat-raised-button color="warn" (click)="clearCartItem()" [disabled]="totalCount < 1 || totalCount == undefined">
+        <mat-icon>delete_forever</mat-icon> clear cart
+      </button>
+      <br /><br />
+      <button mat-raised-button color="primary" (click)="checkout()" [disabled]="totalCount < 1 || totalCount == undefined">
+        <mat-icon>shop</mat-icon> Check out
+      </button>
+    </div>
+  </div>
+</mat-card>

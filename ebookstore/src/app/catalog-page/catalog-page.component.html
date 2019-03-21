@@ -1,0 +1,14 @@
+<div class="page_catalog">
+  <!-- <app-advance-search>Loading...</app-advance-search> -->
+
+  <div class="cardList">
+    <!-- <catalog-filters (filter)="filterCatalogItems($event)"></catalog-filters> -->
+    <!-- <div class="page_catalog-list">
+          <h2 *ngIf="isEmptyCatalog()">No computers in the catalog</h2> -->
+
+    <!-- <div style="display: :flex;"> -->
+    <catalog-item *ngFor="let book of allBooks" class="item page_catalog-list-item" [item]="book"></catalog-item>
+    <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>

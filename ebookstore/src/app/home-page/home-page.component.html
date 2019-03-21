@@ -1,0 +1,21 @@
+<div>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>{{applicationTitle}}</span>
+      <!-- <span><app-advance-search>Loading...</app-advance-search></span> -->
+      <span class="example-spacer"></span>
+      <button mat-button [matMenuTriggerFor]="menu" (click)="redirectToLogin()">
+        <mat-icon class="example-icon">person</mat-icon>{{username}}
+      </button>
+      <mat-menu #menu="matMenu">
+        <span *ngFor="let theme of themes">
+          <button mat-menu-item (click)="installTheme(theme)">{{theme.name}}</button>
+        </span>
+      </mat-menu>
+      <button mat-button (click)="redirectToCart()">
+        <mat-icon [matBadge]="totalCartItem" matBadgePosition='above before' matBadgeColor="warn" class="example-icon">shopping_cart</mat-icon>
+        Cart
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

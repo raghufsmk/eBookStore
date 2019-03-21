@@ -1,0 +1,20 @@
+table {
+    width: 60%;
+  }
+
+.cart-table{
+  display: flex;
+}
+
+.empty-cart{
+  display: block;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 40px;
+  background-color: lightgrey;
+  text-align: center;
+  padding-top: 17px;
+  font-weight: bold;
+  width: 60%;
+  border-radius: 10px;
+}
