@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `bookstore` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
-USE `bookstore`;
 -- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bookstore
@@ -140,7 +138,7 @@ CREATE TABLE `tbl_order_details` (
 
 LOCK TABLES `tbl_order_details` WRITE;
 /*!40000 ALTER TABLE `tbl_order_details` DISABLE KEYS */;
-INSERT INTO `tbl_order_details` VALUES (4,97800605556,1,NULL),(4,97803160179,1,NULL),(4,97803163466,2,NULL),(4,97803455429,1,NULL),(4,97807434771,1,NULL),(4,97808129935,1,NULL),(4,97814774685,1,NULL),(4,97818481627,1,NULL);
+INSERT INTO `tbl_order_details` VALUES (9,97814000338,1,NULL),(9,97814013128,1,NULL),(10,97800624098,2,NULL),(10,97801401773,1,NULL),(11,97801401773,1,NULL),(11,97803162006,1,NULL);
 /*!40000 ALTER TABLE `tbl_order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +160,7 @@ CREATE TABLE `tbl_orders` (
   PRIMARY KEY (`order_id`),
   KEY `cust_id` (`cust_id`),
   CONSTRAINT `tbl_orders_ibfk_2` FOREIGN KEY (`cust_id`) REFERENCES `tbl_customer` (`cust_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,9 +169,73 @@ CREATE TABLE `tbl_orders` (
 
 LOCK TABLES `tbl_orders` WRITE;
 /*!40000 ALTER TABLE `tbl_orders` DISABLE KEYS */;
-INSERT INTO `tbl_orders` VALUES (1,'2013-12-12 00:00:00',NULL,1001,'placed_order',NULL,NULL),(2,'0001-01-01 00:00:00',NULL,1001,'placed',NULL,NULL),(3,'0001-01-01 00:00:00',NULL,1001,'placed',NULL,NULL),(4,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(5,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(6,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(10,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(11,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(12,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(13,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(14,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(15,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(16,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(17,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(18,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(19,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(20,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(21,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(22,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(23,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(24,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL),(25,'2019-03-21 00:00:00',NULL,1001,'placed',NULL,NULL);
+INSERT INTO `tbl_orders` VALUES (1,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(2,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(3,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(4,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(5,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(6,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(7,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(8,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(9,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(10,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL),(11,'2019-03-22 00:00:00',NULL,1001,'Placed',NULL,NULL);
 /*!40000 ALTER TABLE `tbl_orders` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'bookstore'
+--
+
+--
+-- Dumping routines for database 'bookstore'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `sp_place_order` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_place_order`(IN cust_id INT,
+IN products JSON,
+OUT out_order_details_count INT)
+BEGIN
+DECLARE var_order_date DATETIME;
+DECLARE var_order_id INT;
+DECLARE var_current_date DATETIME;
+DECLARE var_order_status VARCHAR(40);
+DECLARE var_items_count BIGINT UNSIGNED DEFAULT JSON_LENGTH(`products`);
+DECLARE var_index BIGINT UNSIGNED DEFAULT 0;
+DECLARE var_isbn bigint;
+
+SET var_current_date = CURDATE();
+# SELECT CONCAT('Current data:', var_current_date);
+SET var_order_status = 'Placed';
+
+# Add Order entry in Order table
+INSERT INTO tbl_orders(order_date, cust_id, order_status) VALUES(var_current_date, cust_id, var_order_status);
+
+# Get newly inserted order_id
+ SELECT order_id into var_order_id
+	 FROM tbl_orders 
+     WHERE order_id=(SELECT LAST_INSERT_ID());
+     
+WHILE var_index < var_items_count DO
+    INSERT INTO tbl_order_details (order_id, isbn, quantity)
+     VALUES (var_order_id,
+     JSON_EXTRACT(`products`, CONCAT('$[', `var_index`, '].isbn')),     
+     JSON_EXTRACT(`products`, CONCAT('$[', `var_index`, '].quantity')));
+     SET var_index := var_index + 1;
+     #set var_isbn= JSON_EXTRACT(`products`, CONCAT('$[', `var_index`, '].isbn')) ;
+    END WHILE;
+# SELECT CONCAT('ISBN From products:', var_isbn);
+
+SELECT count(*) into out_order_details_count
+	 FROM tbl_order_details 
+     WHERE order_id=var_order_id;
+     
+# set out_order_status = true;
+     
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -184,4 +246,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-22  0:06:02
+-- Dump completed on 2019-03-22 18:52:37
