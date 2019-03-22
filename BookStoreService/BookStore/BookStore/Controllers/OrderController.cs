@@ -19,8 +19,8 @@ namespace BookStore.Controllers
             try
             {
                 OrderModel objOrder = new OrderModel();
-                bool blnStatus = objOrder.PlaceOrder(orderData);
-                var response = Request.CreateResponse(blnStatus);
+                Int32 noOfItems = objOrder.PlaceOrder(orderData);
+                var response = Request.CreateResponse(noOfItems);
                 return response;
             }
             catch (Exception)

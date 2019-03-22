@@ -25,6 +25,8 @@ export class ShoppingCartComponent implements OnInit {
   totalCount: number;
   subscription: Subscription;
   productData: Array<Product> = [];
+  orderCount: number;
+  orderMessage: string;
 
   constructor(private fetchCart: AddProductService, private router: Router,
     private placeOrder: CheckOutService, private loginServ: LoginService,
@@ -66,8 +68,10 @@ export class ShoppingCartComponent implements OnInit {
 
   checkout() {
     // Create object for Order
+    this.productData = [];
     let productItem: Product;
     this.cartItems = this.fetchCart.getCartItems();
+    // tslint:disable-next-line:prefer-const
     for (let item of this.cartItems) {
       productItem = new Product();
       productItem.isbn = item['isbn'];
@@ -83,9 +87,11 @@ export class ShoppingCartComponent implements OnInit {
 
     this.placeOrder.checkOutOrder(params).subscribe(
       res => {
-        console.log(res);
+        console.log(`Order Count ${res}`);
         if (res) {
-          this.snackBar.open(`Order has been placed succesfully`, '', {
+          this.orderCount = res;
+          this.orderMessage = `Order has been placed succesfully for ${res} items`;
+          this.snackBar.open(`Order has been placed succesfully for ${res} items`, '', {
             duration: 2000,
           });
           this.clearCartItem();

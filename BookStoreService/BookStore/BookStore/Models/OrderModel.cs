@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,41 +10,39 @@ namespace BookStore.Models
 {
     public class OrderModel
     {
-        public Boolean PlaceOrder(OrderDataModel orderData)
+        public Int32 PlaceOrder(OrderDataModel orderData)
         {
             DAL objDal = new DAL();
             MySqlConnection mySqlConnect = new MySqlConnection();
             mySqlConnect = objDal.GetConnection();
             mySqlConnect.Open();
+            int orderCount = 0;
             try
             {
-                MySqlCommand placeOrderCmd = mySqlConnect.CreateCommand();
-                //DateTime dt = new DateTime();
-                //string currentDate = String.Format("{0:yyyy-MM-dd}", dt);
-                string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
-                // Insert into tbl_order
-                placeOrderCmd.CommandText = "INSERT INTO tbl_orders(order_date, cust_id, order_status) VALUES('" + currentDate + "', '" + orderData.cust_id + "', 'placed')";
+                MySqlCommand placeOrderCmd = new MySqlCommand("sp_place_order", mySqlConnect);
+                placeOrderCmd.CommandType = CommandType.StoredProcedure;
+
+                MySqlParameter par1 = new MySqlParameter("@cust_id", MySqlDbType.Int32);
+                par1.Direction = ParameterDirection.Input;
+                par1.Value = orderData.cust_id;
+                placeOrderCmd.Parameters.Add(par1);
+
+                MySqlParameter par2 = new MySqlParameter("@products", MySqlDbType.JSON);
+                par2.Direction = ParameterDirection.Input;
+                par2.Value = JsonConvert.SerializeObject(orderData.products);
+                placeOrderCmd.Parameters.Add(par2);
+
+                MySqlParameter par3 = new MySqlParameter("@out_order_details_count", MySqlDbType.Int32);
+                par3.Direction = ParameterDirection.Output;
+                placeOrderCmd.Parameters.Add(par3);
+
                 placeOrderCmd.ExecuteNonQuery();
-                placeOrderCmd.CommandText = "SELECT order_id FROM tbl_orders WHERE cust_id='" + orderData.cust_id + "' AND order_date='" + currentDate + "';";
-                MySqlDataAdapter dataAdap = new MySqlDataAdapter(placeOrderCmd);
-                //DataSet ds = new DataSet();
-                DataTable dtOrderId = new DataTable();
-                dataAdap.Fill(dtOrderId);
-                string strOrderID = dtOrderId.Rows[0]["order_id"].ToString();
-                // Add Order details
-                string addOrderDetails = null; ;
-                foreach (ProductDataModel product in orderData.products)
-                {
-                    addOrderDetails += "INSERT INTO tbl_order_details (order_id, isbn, quantity) VALUES ('" + strOrderID + "','" + product.isbn + "','" + product.quantity + "'  ); ";
-                }
-                placeOrderCmd.CommandText = addOrderDetails;
-                placeOrderCmd.ExecuteNonQuery();
-                //DataTable dt = new DataTable();
-                //dt.DataSource = ds.Tables[0].DefaultView;
-                //object userObject = Utilities.Utilities.DataTableToJSONWithJSONNet(userTable);
+
+                orderCount = Convert.ToInt32(placeOrderCmd.Parameters["@out_order_details_count"].Value.ToString());
+
                 mySqlConnect.Close();
-                //return userObject;
-                return true;
+                
+                return orderCount;
             }
             catch (Exception)
             {

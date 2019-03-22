@@ -3,9 +3,6 @@
     <ng-container *ngIf="totalCount > 0">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-
         <!-- Title Column -->
         <ng-container matColumnDef="position">
           <th mat-header-cell *matHeaderCellDef>Title</th>
@@ -67,4 +64,5 @@
       </button>
     </div>
   </div>
+  <div *ngIf="orderCount!==undefined" class="empty-cart">{{orderMessage}}</div>
 </mat-card>
