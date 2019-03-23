@@ -13,6 +13,15 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 Business logic and Database connectivity to fetch and store data written in RestFull service using ASP.NET WebAPI. Its available under [BookStoreService/BookStore](https://github.com/raghufsmk/eBookStore/tree/develop/BookStoreService/BookStore)
 
 The WebAPI either needs to be deployed in IIS or running before we run UI code.
+
+## Dependency NuGet Packages
+* Microsoft.AspNet.Cors
+* Microsoft.AspNet.WebApi.WebHost
+* Microsoft.IdentityModel
+* Microsoft.IdentityModel.JsonWebTokens
+* Microsoft.IdentityModel.Tokens
+* Newtonsoft.Json
+
 # Database
 
 Database is created with mysql and its available [here](https://github.com/raghufsmk/eBookStore/tree/develop/DB) 
