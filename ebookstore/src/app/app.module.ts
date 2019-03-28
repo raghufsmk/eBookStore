@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 
 import { MaterialModule } from './shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,13 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { ShoppingCardItemComponent } from './shopping-cart/shopping-card-item/shopping-card-item.component';
 import { LoginComponent } from './login/login.component';
 
-import {AddProductService} from './services/add-product.service';
+import { AddProductService } from './services/add-product.service';
+import { ConfigService } from './services/config.service';
+
+// Load Config data
+export function ConfigLoader(configService: ConfigService) {
+  return () => configService.load();
+}
 
 @NgModule({
   declarations: [
@@ -44,7 +50,13 @@ import {AddProductService} from './services/add-product.service';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [CatalogService, AddProductService],
+  providers: [CatalogService, AddProductService, ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: ConfigLoader,
+      deps: [ConfigService],
+      multi: true
+    }],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA,
     CUSTOM_ELEMENTS_SCHEMA]

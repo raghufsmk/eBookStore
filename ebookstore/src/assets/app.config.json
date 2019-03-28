@@ -1,0 +1,5 @@
+{
+    "CatalogUrl": "http://localhost:51714/api/Catalog/",
+    "LoginUrl": "http://localhost:51714/api/Login/",
+    "OrderUrl": "http://localhost:51714/api/Order/"
+}

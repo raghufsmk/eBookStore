@@ -3,17 +3,21 @@ import { Book } from '../models/book.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
+import { ConfigService } from '../services/config.service';
+
 
 @Injectable()
 export class CatalogService {
-  url = 'http://localhost:51714/api/Catalog/';
+  url: string;
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configData: ConfigService) {
+    this.url = this.configData.getConfig('CatalogUrl');
+  }
 
   public getAllBooks(): Observable<Book> {
     return this.http.get<Book>(this.url)

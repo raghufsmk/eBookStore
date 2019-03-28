@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
+import { ConfigService } from '../services/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  url = 'http://localhost:51714/api/Login/';
+  url: string;
   headers: HttpHeaders;
 
   httpOptions = {
@@ -19,7 +20,9 @@ export class LoginService {
 
   loggedInUserSubject = new Subject<User>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configData: ConfigService) {
+    this.url = this.configData.getConfig('LoginUrl');
+  }
 
   public loginToBookStore(params: HttpParams): Observable<User[]> {
 

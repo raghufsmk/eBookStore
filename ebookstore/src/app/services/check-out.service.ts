@@ -5,19 +5,22 @@ import { retry, catchError } from 'rxjs/operators';
 import { Order } from '../models/order.model';
 import { LoginService } from '../login/login.service';
 import { Router } from '@angular/router';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CheckOutService {
-  url = 'http://localhost:51714/api/Order/';
+  url: string;
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
 
-  constructor(private http: HttpClient, private loginServ: LoginService, private router: Router) {  }
+  constructor(private http: HttpClient, private loginServ: LoginService, private router: Router, private configData: ConfigService) {
+    this.url = this.configData.getConfig('OrderUrl');
+   }
 
   public checkOutOrder(params: any): Observable<any> {
 
